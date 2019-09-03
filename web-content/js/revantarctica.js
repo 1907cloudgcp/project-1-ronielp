@@ -51,6 +51,28 @@ async function calcSubmit(event){
 }
 
 
+document.getElementById('bach-label').innerText = "Input a Number Between 1-23: "
+
+document.getElementById('bach-input').type = 'text'
+
+async function bachSubmit(event){
+    event.preventDefault()
+    let input_bach = document.getElementById('bach-input').value
+    let result = await fetch("https://us-central1-rev-antarctica.cloudfunctions.net/find-bachelor?input_bach=" + input_bach, {
+        method: 'POST',
+        body: JSON.stringify(document.getElementById('bach-input').value)
+    })
+    if(document.getElementById('bach-input').type === 'number'){
+        document.getElementById('bach-input').value = 0
+    } else {
+        document.getElementById('bach-input').value = ''
+    }
+    let data = await result.json()
+    let div = document.getElementById('bach-container')
+    let display = document.createElement('p')
+    display.innerText = `The star of that season of The Bachelor was: ${data} `
+    div.appendChild(display)
+}
 
 async function buildTable (){
     let objectResponse = await fetch("https://us-central1-rev-antarctica.cloudfunctions.net/get-data")
