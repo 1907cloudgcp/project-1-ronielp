@@ -1,10 +1,10 @@
 let dbObject = {
-    nombre: '',
-    client:'',
-    techTrack:''
+    Name: '',
+    Age:'',
+    Color:''
 }
 
-document.getElementById('header').innerText = "YOUR TITLE GOES HERE";
+document.getElementById('header').innerText = "Revature Antarctica";
 
 //this assumes your cloud function will return a value named address with the address to an image, in a cloud storage bucket
 async function setUpImages(){
@@ -14,25 +14,27 @@ async function setUpImages(){
     images.push(document.getElementById('carousel-3'))
     images.forEach(async (value, index)=>{
         //index is the numbered image in the carousel if that matters to you
-        let response = await fetch("https://us-central1-cloudadmingcpdemos.cloudfunctions.net/helloworld")
+        let response = await fetch("https://us-central1-rev-antarctica.cloudfunctions.net/get-bucket-images?i="+index)
         
     if(response.status <200 || response.status > 299){
         value.src = "images/penguins.jpg"
     } else {
         data =  await response.json()
-        value.src = data["WHATEVER YOU NAMED THE FIELD IN YOUR RETURN"]
+        value.src = data["p"]
     }
     })
 }
 setUpImages()
 
-document.getElementById('calc-label').innerText = "YOU CALC LABEL TEXT"
+document.getElementById('calc-label').innerText = "Input a Word: "
 
-document.getElementById('calc-input').type = 'text' || "YOUR INPUT TYPE, REPLACE TEXT"
+document.getElementById('calc-input').type = 'text'
 
 async function calcSubmit(event){
     event.preventDefault()
-    let result = await fetch("YOUR CALC CLOUD FUNCTION URL", {
+    let input_word = document.getElementById('calc-input').value
+    //let result = await fetch("https://us-central1-rev-antarctica.cloudfunctions.net/calc-input?input_word=${input_word}", {
+    let result = await fetch("https://us-central1-rev-antarctica.cloudfunctions.net/calc-input?input_word=" + input_word, {
         method: 'POST',
         body: JSON.stringify(document.getElementById('calc-input').value)
     })
@@ -44,14 +46,14 @@ async function calcSubmit(event){
     let data = await result.json()
     let div = document.getElementById('calc-container')
     let display = document.createElement('p')
-    display.innerText = `Your Result is: ${data} `
+    display.innerText = `The length of the word was: ${data} `
     div.appendChild(display)
 }
 
 
 
 async function buildTable (){
-    let objectResponse = await fetch("YOUR CLOUD FUNCTION URL FOR GETTING DATA")
+    let objectResponse = await fetch("https://us-central1-rev-antarctica.cloudfunctions.net/get-data")
     if(objectResponse.status <200 || objectResponse.status >299){
         let error =document.createElement('p')
         error.innerText = "Fetch Failed"
@@ -126,7 +128,7 @@ function createObject(event){
         }
     }
     
-    fetch('YOUR CLOUD FUNCTION URL FOR CREATING A NEW OBJECT',{
+    fetch('https://us-central1-rev-antarctica.cloudfunctions.net/store-object',{
         method: 'POST',
         body: JSON.stringify(newObj)
     })
